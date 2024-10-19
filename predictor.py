@@ -16,4 +16,4 @@ y_pred_prob_catboost = catboost_model.predict_proba(X)[:, 1]
 
 result_df = pd.DataFrame({'id': df_processed['id'], 'score': y_pred_prob_catboost})
 
-result_df.to_csv('predictions.csv', index=False)
+result_df.to_csv('submissions.csv', index=False)
