@@ -1,9 +1,5 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from catboost import CatBoostClassifier
-from sklearn.metrics import classification_report, accuracy_score
 from scipy.signal import find_peaks
 import warnings
 
@@ -392,42 +388,3 @@ df_processed.fillna(0, inplace=True)
 
 df_processed.to_parquet('train_data_processed.parquet')
 
-X = df_processed.drop(['id', 'label'], axis=1)
-y = df_processed['label']
-
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-catboost_model = CatBoostClassifier(
-    iterations=300,
-    depth=6,
-    learning_rate=0.1,
-    random_seed=42,
-    logging_level='Silent',
-    eval_metric='Logloss'
-)
-
-catboost_model.fit(X_scaled, y)
-
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-
-catboost_model = CatBoostClassifier(
-    iterations=300,  # Количество деревьев (итераций бустинга)
-    depth=6,  # Глубина деревьев
-    learning_rate=0.1,  # Скорость обучения
-    random_seed=42,  # Случайное начальное значение для воспроизводимости
-    logging_level='Silent',  # Отключаем логирование для упрощения вывода
-    eval_metric='Logloss'  # Метрика оценки
-)
-
-# Обучаем модель
-catboost_model.fit(X_train, y_train)
-
-# Предсказание на тестовой выборке
-y_pred_catboost = catboost_model.predict(X_test)
-
-accuracy_catboost = accuracy_score(y_test, y_pred_catboost)
-print(f'Accuracy (CatBoost): {accuracy_catboost:.2f}')
-
-# Печатаем подробный отчет о классификации
-print(classification_report(y_test, y_pred_catboost))

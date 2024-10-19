@@ -1,13 +1,5 @@
-import joblib
-import pandas as pd
-from catboost import CatBoostClassifier
-
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from catboost import CatBoostClassifier
-from sklearn.metrics import classification_report, accuracy_score
 from scipy.signal import find_peaks
 import warnings
 
